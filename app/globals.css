@@ -31,11 +31,17 @@
   --font-sans: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-serif);
   line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -51,17 +57,20 @@ h1, h2, h3, h4, h5, h6 {
   background-clip: text;
 }
 
+/* Form inputs - mobile optimized */
 input[type="text"],
 input[type="email"],
 textarea {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   background: white;
   font-family: var(--font-serif);
-  font-size: 1rem;
+  font-size: 16px; /* Prevents zoom on iOS */
   transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 input[type="text"]:focus,
@@ -72,16 +81,20 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(125, 157, 127, 0.15);
 }
 
+/* Checkbox/Radio - mobile touch friendly */
 .checkbox-custom {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   cursor: pointer;
   transition: all 0.2s;
   background: white;
+  min-height: 3.5rem; /* Better touch target */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .checkbox-custom:hover {
@@ -89,19 +102,31 @@ textarea:focus {
   background: var(--accent-light);
 }
 
+.checkbox-custom:active {
+  transform: scale(0.98);
+}
+
 .checkbox-custom:has(input:checked) {
   border-color: var(--primary);
   background: rgba(125, 157, 127, 0.1);
+  border-width: 2px;
 }
 
 .checkbox-custom input[type="checkbox"],
 .checkbox-custom input[type="radio"] {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
   accent-color: var(--primary);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
+.checkbox-custom span {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Primary button - mobile optimized */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -117,6 +142,9 @@ textarea:focus {
   border-radius: 9999px;
   cursor: pointer;
   transition: all 0.2s;
+  min-height: 3.5rem;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .btn-primary:hover {
@@ -125,31 +153,50 @@ textarea:focus {
   box-shadow: 0 4px 12px rgba(125, 157, 127, 0.3);
 }
 
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
 .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
+/* Section cards - responsive */
 .section-card {
   background: white;
   border: 1px solid var(--border);
   border-radius: 1rem;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+@media (min-width: 640px) {
+  .section-card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
 }
 
 .section-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   font-family: var(--font-sans);
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--foreground);
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
   border-bottom: 2px solid var(--accent);
+}
+
+@media (min-width: 640px) {
+  .section-title {
+    font-size: 1.125rem;
+  }
 }
 
 .section-number {
@@ -163,4 +210,17 @@ textarea:focus {
   font-size: 0.875rem;
   font-weight: 700;
   border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Safe area for notched devices */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  footer {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
 }
