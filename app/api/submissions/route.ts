@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const id = await insertSubmission(data);
+    const id = insertSubmission(data);
 
     return NextResponse.json(
       { success: true, id },
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const submissions = await getAllSubmissions();
+    const submissions = getAllSubmissions();
 
     return NextResponse.json({ submissions });
   } catch (error) {
@@ -74,7 +74,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const deleted = await deleteSubmission(parseInt(id, 10));
+    const deleted = deleteSubmission(parseInt(id, 10));
 
     if (!deleted) {
       return NextResponse.json(
