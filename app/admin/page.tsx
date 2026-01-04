@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface Submission {
   id: number;
@@ -8,13 +8,13 @@ interface Submission {
   edad: string | null;
   formacion: string | null;
   tiempo_trabajo: string | null;
-  areas: string | null;
+  areas: string[] | null;
   objetivo: string | null;
   modalidad: string | null;
   periodo: string | null;
   fecha_concreta: string | null;
   formato: string | null;
-  objetivo_profesional: string | null;
+  objetivo_profesional: string[] | null;
   created_at: string;
 }
 
@@ -82,7 +82,7 @@ export default function AdminPage() {
     }
   };
 
-  const deleteSubmission = async (id: number) => {
+  const handleDeleteSubmission = async (id: number) => {
     if (!confirm("¿Estas seguro de eliminar este registro?")) return;
 
     try {
@@ -124,13 +124,13 @@ export default function AdminPage() {
       s.edad || "",
       formacionLabels[s.formacion || ""] || s.formacion || "",
       s.tiempo_trabajo || "",
-      s.areas ? JSON.parse(s.areas).join(", ") : "",
+      s.areas ? s.areas.join(", ") : "",
       s.objetivo || "",
       modalidadLabels[s.modalidad || ""] || s.modalidad || "",
       periodoLabels[s.periodo || ""] || s.periodo || "",
       s.fecha_concreta || "",
       formatoLabels[s.formato || ""] || s.formato || "",
-      s.objetivo_profesional ? JSON.parse(s.objetivo_profesional).join(", ") : "",
+      s.objetivo_profesional ? s.objetivo_profesional.join(", ") : "",
     ]);
 
     const csvContent =
@@ -142,15 +142,6 @@ export default function AdminPage() {
     a.href = url;
     a.download = `inscripciones-curso-${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
-  };
-
-  const parseArray = (str: string | null): string[] => {
-    if (!str) return [];
-    try {
-      return JSON.parse(str);
-    } catch {
-      return [];
-    }
   };
 
   if (!isAuthenticated) {
@@ -270,7 +261,7 @@ export default function AdminPage() {
                   Detalle
                 </h2>
                 <button
-                  onClick={() => deleteSubmission(selectedSubmission.id)}
+                  onClick={() => handleDeleteSubmission(selectedSubmission.id)}
                   className="text-red-500 hover:text-red-700 text-sm font-[family-name:var(--font-sans)]"
                 >
                   Eliminar
@@ -300,11 +291,11 @@ export default function AdminPage() {
                   </div>
                 )}
 
-                {selectedSubmission.areas && (
+                {selectedSubmission.areas && selectedSubmission.areas.length > 0 && (
                   <div>
                     <p className="text-sm text-[--text-muted] font-[family-name:var(--font-sans)]">Areas de interes</p>
                     <div className="flex flex-wrap gap-2 mt-1">
-                      {parseArray(selectedSubmission.areas).map((area, i) => (
+                      {selectedSubmission.areas.map((area, i) => (
                         <span key={i} className="text-sm px-2 py-1 bg-[--sage] text-white rounded-full">
                           {area}
                         </span>
@@ -342,11 +333,11 @@ export default function AdminPage() {
                   </div>
                 )}
 
-                {selectedSubmission.objetivo_profesional && (
+                {selectedSubmission.objetivo_profesional && selectedSubmission.objetivo_profesional.length > 0 && (
                   <div>
                     <p className="text-sm text-[--text-muted] font-[family-name:var(--font-sans)]">Objetivos profesionales</p>
                     <ul className="list-disc list-inside mt-1 space-y-1">
-                      {parseArray(selectedSubmission.objetivo_profesional).map((obj, i) => (
+                      {selectedSubmission.objetivo_profesional.map((obj, i) => (
                         <li key={i} className="text-sm">{obj}</li>
                       ))}
                     </ul>

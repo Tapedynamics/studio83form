@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const id = insertSubmission(data);
+    const id = await insertSubmission(data);
 
     return NextResponse.json(
       { success: true, id },
@@ -31,7 +31,6 @@ export async function POST(request: NextRequest) {
 // GET - Get all submissions (for admin)
 export async function GET(request: NextRequest) {
   try {
-    // Simple auth check via query param (in production, use proper auth)
     const { searchParams } = new URL(request.url);
     const key = searchParams.get("key");
 
@@ -42,7 +41,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const submissions = getAllSubmissions();
+    const submissions = await getAllSubmissions();
 
     return NextResponse.json({ submissions });
   } catch (error) {
@@ -75,7 +74,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const deleted = deleteSubmission(parseInt(id, 10));
+    const deleted = await deleteSubmission(parseInt(id, 10));
 
     if (!deleted) {
       return NextResponse.json(
